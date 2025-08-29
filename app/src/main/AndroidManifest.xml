@@ -2,9 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Sender must be able to talk to Receiver's service -->
+    <uses-permission android:name="com.app.receiverappcontroller.PERMISSION_BIND_SERVICE" />
+
     <queries>
-        <package android:name="com.app.ipcsender" />
+        <package android:name="com.app.receiverappcontroller" />
+        <package android:name="com.app.common"/>
     </queries>
+
+    <!-- Sender defines its own permission for its own service -->
+    <permission
+        android:name="com.app.senderappcontroller.PERMISSION_BIND_SERVICE"
+        android:protectionLevel="signature" />
 
     <application
         android:allowBackup="true"
@@ -15,15 +25,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SenderAppController">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <service
+            android:name="com.app.ipc_library.IpcService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.app.senderappcontroller.PERMISSION_BIND_SERVICE">
+
+            <!-- This action identifies Sender’s service -->
+            <intent-filter>
+                <action android:name="com.app.ipc_library.IpcService" />
+            </intent-filter>
+        </service>
+
+    </application>
 </manifest>

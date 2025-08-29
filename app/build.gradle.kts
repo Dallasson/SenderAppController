@@ -43,6 +43,9 @@ dependencies {
 
     implementation(files("libs/app-debug.aar"))
     implementation(libs.androidx.core.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
